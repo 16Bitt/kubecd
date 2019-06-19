@@ -29,6 +29,20 @@ func New() *KubeApiState {
   }
 }
 
+func (api KubeApiState) GetNamespaces() []string {
+  namespaces, err := api.Clientset.CoreV1().Namespaces().List(metav1.ListOptions{})
+  if err != nil {
+    panic(err)
+  }
+
+  values := []string{}
+  for _, item := range namespaces.Items {
+    values = append(values, item.Name)
+  }
+
+  return values
+}
+
 func (api KubeApiState) GetPodCount() int {
   pods, err := api.Clientset.CoreV1().Pods("").List(metav1.ListOptions{})
   if err != nil {
